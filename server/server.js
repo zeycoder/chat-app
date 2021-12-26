@@ -5,7 +5,7 @@ http.listen(3000);
 io.on('connection',socket=>{
     console.log('bir kullanıcı bağlandı');
 
-    socket.on('disconnected', () =>{
+    socket.on('disconnect', () =>{
         console.log('bir kullanıcı ayrıldı')
     });
 });
