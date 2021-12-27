@@ -9,13 +9,15 @@
     <div v-else>
       Online kullanıcılar
       <ul>
-        <li>test</li>
-        <li>test</li>
+        <li v-bind:key="user.id" v-for="user in users">{{ user.name }}</li>
       </ul>
+      <form $submit.prevent="sendMessage()">
+        <input v-model="message" placeholder="Mesajınız">
+        <input type="submit">
+      </form>
       Mesajlar
       <ul>
-        <li>mesaj</li>
-        <li>mesaj</li>
+        <li v-bind:key="message" v-for="message in messages" v-html="message" ></li>
       </ul>
     </div>
   </div>
@@ -26,13 +28,31 @@ export default {
   data () {
     return {
       login:false,
-      name:""
+      name:"",
+      users:[],
+      message:"",
+      messages:[]
+    }
+  },
+  sockets:{
+    users(data){
+      this.users = data;
+    },
+    messages(data){
+      this.messages=data;
     }
   },
   methods:{
     enterName(){
-      this.login=true
+      this.login=true;
       this.$socket.emit('new_user',this.name);
+    },
+    sendMessage(){
+      this.$socket.emit('new_message',{
+        name:this.name,
+        message: this.message
+      });
+      this.message='';
     }
   }
 }
